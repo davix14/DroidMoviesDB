@@ -33,15 +33,6 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Title(
-    title: String
-) {
-    Text(
-        title,
-        style = MaterialTheme.typography.headlineLarge
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,8 +50,9 @@ fun LoginForm() {
                 Text(
                     stringResource(R.string.login_Title),
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.headlineLarge
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 var usernameText by rememberSaveable { mutableStateOf("") }
 
                 OutlinedTextField(
@@ -80,7 +72,10 @@ fun LoginForm() {
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                Row {
-                   OutlinedButton(onClick = { /*TODO*/ }) {
+                   OutlinedButton(onClick = {
+                       passwordText = ""
+                       usernameText = ""
+                   }) {
                        Text(
                            "Clear",
                            color = MaterialTheme.colorScheme.secondary
@@ -97,11 +92,6 @@ fun LoginForm() {
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
 }
 
 @Preview(widthDp = 360, heightDp = 640, showBackground = true, backgroundColor = 0x9ea39f)
