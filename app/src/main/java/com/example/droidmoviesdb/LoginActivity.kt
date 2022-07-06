@@ -43,43 +43,58 @@ fun Title(
     )
 }
 
-@Composable
-fun UsernameTextField() {
-    var usernameText by rememberSaveable { mutableStateOf("") }
-
-    OutlinedTextField(
-        value = usernameText,
-        onValueChange = { usernameText = it },
-        label = { Text("Username") },
-        leadingIcon = { Icon(Icons.Default.Person, contentDescription = "") }
-    )
-}
-
-@Composable
-fun PasswordTextField() {
-    var passwordText by rememberSaveable { mutableStateOf("") }
-
-    OutlinedTextField(
-        value = passwordText,
-        onValueChange = { passwordText = it },
-        placeholder = { Text("Password") },
-        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "") }
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginForm() {
-    Card(
-
+    Surface(
+        modifier = Modifier
+            .padding(16.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Card(
+
         ) {
-            Title(stringResource(R.string.login_Title))
-            UsernameTextField()
-            Spacer(modifier = Modifier.height(16.dp))
-            PasswordTextField()
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    stringResource(R.string.login_Title),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge
+                )
+                var usernameText by rememberSaveable { mutableStateOf("") }
+
+                OutlinedTextField(
+                    value = usernameText,
+                    onValueChange = { usernameText = it },
+                    label = { Text("Username") },
+                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = "") }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                var passwordText by rememberSaveable { mutableStateOf("") }
+
+                OutlinedTextField(
+                    value = passwordText,
+                    onValueChange = { passwordText = it },
+                    placeholder = { Text("Password") },
+                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "") }
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+               Row {
+                   OutlinedButton(onClick = { /*TODO*/ }) {
+                       Text(
+                           "Clear",
+                           color = MaterialTheme.colorScheme.secondary
+                       )
+                   }
+                   Spacer(modifier = Modifier.width(16.dp))
+                    OutlinedButton(onClick = { /*TODO*/ }) {
+                        Text(
+                            "Submit",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
         }
     }
 }
