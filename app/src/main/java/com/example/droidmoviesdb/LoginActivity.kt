@@ -94,12 +94,14 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar(){
+fun TopAppBar() {
     SmallTopAppBar(
-        title = { Text(
-            "DroidMoviesDB",
+        title = {
+            Text(
+                stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium
-            ) },
+            )
+        },
         colors = TopAppBarDefaults
             .smallTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -113,7 +115,7 @@ fun LoginView() {
     DroidMoviesDBTheme {
         Scaffold(
             topBar = { TopAppBar() }
-        ){
+        ) {
             LoginForm(it)
         }
     }
