@@ -51,7 +51,7 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues()) {
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.headlineLarge
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 var usernameText by rememberSaveable { mutableStateOf("") }
 
                 OutlinedTextField(
@@ -60,7 +60,7 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues()) {
                     label = { Text("Username") },
                     leadingIcon = { Icon(Icons.Default.Person, contentDescription = "") }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 var passwordText by rememberSaveable { mutableStateOf("") }
 
                 OutlinedTextField(
@@ -69,7 +69,7 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues()) {
                     placeholder = { Text("Password") },
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "") }
                 )
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(32.dp))
                 Row {
                     OutlinedButton(onClick = {
                         passwordText = ""
@@ -80,11 +80,18 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues()) {
                             color = MaterialTheme.colorScheme.secondary
                         )
                     }
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     OutlinedButton(onClick = { /*TODO*/ }) {
                         Text(
                             "Submit",
                             color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    OutlinedButton(onClick = { /*TODO*/ }) {
+                        Text(
+                            "Register",
+                            color = MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -117,7 +124,7 @@ fun LoginView() {
         Scaffold(
             topBar = { TopAppBar() },
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.inversePrimary)
         ) {
             LoginForm(it)
         }
