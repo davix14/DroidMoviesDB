@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">DroidMoviesDB</string>
-    <string name="login_Title">Login CARD!</string>
+    <string name="login_Title">Login</string>
 </resources>

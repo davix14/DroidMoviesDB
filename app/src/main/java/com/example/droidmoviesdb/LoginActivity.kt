@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,15 +21,7 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DroidMoviesDBTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    LoginForm()
-                }
-            }
+            LoginView()
         }
     }
 }
@@ -37,9 +30,12 @@ class LoginActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginForm() {
-    Surface(
+    Column(
         modifier = Modifier
-            .padding(16.dp)
+            .fillMaxHeight()
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Card(
 
@@ -71,17 +67,17 @@ fun LoginForm() {
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "") }
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-               Row {
-                   OutlinedButton(onClick = {
-                       passwordText = ""
-                       usernameText = ""
-                   }) {
-                       Text(
-                           "Clear",
-                           color = MaterialTheme.colorScheme.secondary
-                       )
-                   }
-                   Spacer(modifier = Modifier.width(16.dp))
+                Row {
+                    OutlinedButton(onClick = {
+                        passwordText = ""
+                        usernameText = ""
+                    }) {
+                        Text(
+                            "Clear",
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
                     OutlinedButton(onClick = { /*TODO*/ }) {
                         Text(
                             "Submit",
@@ -91,6 +87,13 @@ fun LoginForm() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun LoginView() {
+    DroidMoviesDBTheme {
+        LoginForm()
     }
 }
 
