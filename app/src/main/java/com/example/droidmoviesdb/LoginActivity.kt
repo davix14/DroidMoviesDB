@@ -3,6 +3,7 @@ package com.example.droidmoviesdb
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -114,7 +115,9 @@ fun TopAppBar() {
 fun LoginView() {
     DroidMoviesDBTheme {
         Scaffold(
-            topBar = { TopAppBar() }
+            topBar = { TopAppBar() },
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
         ) {
             LoginForm(it)
         }
