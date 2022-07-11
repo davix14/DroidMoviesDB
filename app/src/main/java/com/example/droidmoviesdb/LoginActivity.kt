@@ -18,6 +18,13 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.droidmoviesdb.ui.components.RegisterForm
 import com.example.droidmoviesdb.ui.theme.DroidMoviesDBTheme
 
 class LoginActivity : ComponentActivity() {
@@ -26,13 +33,14 @@ class LoginActivity : ComponentActivity() {
         setContent {
             LoginView()
         }
+
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginForm(paddingValues: PaddingValues = PaddingValues()) {
+fun LoginForm(paddingValues: PaddingValues = PaddingValues(), navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -88,7 +96,7 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues()) {
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    OutlinedButton(onClick = { /*TODO*/ }) {
+                    OutlinedButton(onClick = { navController.navigate("registerForm") }) {
                         Text(
                             "Register",
                             color = MaterialTheme.colorScheme.error
@@ -120,13 +128,17 @@ fun TopAppBar() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginView() {
+    val navController = rememberNavController()
     DroidMoviesDBTheme {
         Scaffold(
             topBar = { TopAppBar() },
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.inversePrimary)
         ) {
-            LoginForm(it)
+            NavHost(navController = navController, startDestination = "loginForm") {
+                composable("loginForm") { LoginForm(PaddingValues(), navController) }
+                composable("registerForm") { RegisterForm().RegisterFormView() }
+            }
         }
     }
 }
