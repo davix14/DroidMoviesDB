@@ -22,55 +22,59 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-        @OptIn(ExperimentalMaterial3Api::class)
-        @Composable
-        fun Homescreen() {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+    @Composable
+    fun HomeScreen() {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center
             ) {
-                Row {
-                    var searchBoxText by remember { mutableStateOf("") }
-                    var isSearchVisible by remember { mutableStateOf(false) }
-                    OutlinedButton(onClick = { isSearchVisible = !isSearchVisible }) {
-                        Text("Hello")
-                    }
-                    Spacer(Modifier.width(16.dp))
-                    if (isSearchVisible) {
-                        OutlinedTextField(
-                            value = searchBoxText,
-                            onValueChange = { searchBoxText = it })
-                    }
+                var searchBoxText by remember { mutableStateOf("") }
+                var isSearchVisible by remember { mutableStateOf(false) }
+                OutlinedButton(onClick = { isSearchVisible = !isSearchVisible }) {
+                    Text("Hello")
+                }
+                Spacer(Modifier.width(16.dp))
+                if (isSearchVisible) {
+                    OutlinedTextField(
+                        value = searchBoxText,
+                        onValueChange = { searchBoxText = it })
                 }
             }
         }
+    }
 
-        @Composable
-        fun TopAppBar() {
-            SmallTopAppBar(
-                title = {
-                    Text(
-                        stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                },
-                colors = TopAppBarDefaults
-                    .smallTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    )
-            )
-        }
+    @Composable
+    fun TopAppBar() {
+        SmallTopAppBar(
+            title = {
+                Text(
+                    stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.headlineMedium
+                )
+            },
+            colors = TopAppBarDefaults
+                .smallTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+        )
+    }
 
-        @Preview(showBackground = true, showSystemUi = true)
-        @OptIn(ExperimentalMaterial3Api::class)
-        @Composable
-        fun MainActivityView() {
-            DroidMoviesDBTheme {
-                Scaffold(
-                    topBar = { TopAppBar() }
-                ) {
-                    Homescreen()
+    @Preview(showBackground = true, showSystemUi = true)
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun MainActivityView() {
+        DroidMoviesDBTheme {
+            Scaffold(
+                topBar = { TopAppBar() }
+            ) {
+                Box(modifier = Modifier.padding(it)) {
+                    HomeScreen()
                 }
             }
         }
+    }
 
 }
