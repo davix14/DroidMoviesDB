@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 var searchBoxText by remember { mutableStateOf("") }
                 var isSearchVisible by remember { mutableStateOf(false) }
                 OutlinedButton(onClick = { isSearchVisible = !isSearchVisible }) {
-                    Text("Hello")
+                    Text("Search")
                 }
                 Spacer(Modifier.width(16.dp))
                 if (isSearchVisible) {
