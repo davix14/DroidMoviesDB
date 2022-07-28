@@ -2,6 +2,7 @@ package com.example.droidmoviesdb.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -41,7 +42,7 @@ class RegisterForm {
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.headlineLarge
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     var firstNameText by rememberSaveable { mutableStateOf("") }
 
                     OutlinedTextField(
@@ -50,7 +51,7 @@ class RegisterForm {
                         label = { Text("First name") },
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = "") }
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     var lastNameText by rememberSaveable { mutableStateOf("") }
 
                     OutlinedTextField(
@@ -59,7 +60,16 @@ class RegisterForm {
                         label = { Text("Last Name") },
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = "") }
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
+                    var emailText by rememberSaveable { mutableStateOf("") }
+
+                    OutlinedTextField(
+                        value = emailText,
+                        onValueChange = { emailText = it},
+                        label = { Text("Email") },
+                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = "") }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                     var passwordText by rememberSaveable { mutableStateOf("") }
 
                     OutlinedTextField(
@@ -68,7 +78,7 @@ class RegisterForm {
                         placeholder = { Text("Password") },
                         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "") }
                     )
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     var confirmPasswordText by rememberSaveable { mutableStateOf("") }
 
                     OutlinedTextField(
@@ -98,7 +108,7 @@ class RegisterForm {
                         Spacer(modifier = Modifier.width(8.dp))
                         OutlinedButton(onClick = { /*TODO*/ }) {
                             Text(
-                                "Register",
+                                "Login",
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
