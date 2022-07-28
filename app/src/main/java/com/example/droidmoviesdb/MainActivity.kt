@@ -95,7 +95,9 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun SingleResult(singleSearchResult: SingleSearchResult) {
         Card {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
                     painter = rememberAsyncImagePainter(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -105,8 +107,7 @@ class MainActivity : ComponentActivity() {
                             .build()
                     ),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(125.dp)
+                    modifier = Modifier.padding(8.dp)
                 )
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
