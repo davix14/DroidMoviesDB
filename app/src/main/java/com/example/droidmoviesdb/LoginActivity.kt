@@ -1,5 +1,6 @@
 package com.example.droidmoviesdb
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -89,7 +91,10 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues(), navController: Nav
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    OutlinedButton(onClick = { /*TODO*/ }) {
+                    val context = LocalContext.current
+                    OutlinedButton(onClick = { context.startActivity(
+                        Intent(context, MainActivity::class.java)
+                    ) }) {
                         Text(
                             "Submit",
                             color = MaterialTheme.colorScheme.primary
