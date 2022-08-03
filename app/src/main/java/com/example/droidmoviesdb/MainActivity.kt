@@ -1,27 +1,34 @@
 package com.example.droidmoviesdb
 
+import SingleSearchResult
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import SingleSearchResult
-import android.app.appsearch.SearchResults
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import coil.compose.AsyncImage
+import androidx.core.text.bold
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.droidmoviesdb.ui.theme.DroidMoviesDBTheme
@@ -39,12 +46,79 @@ class MainActivity : ComponentActivity() {
     fun HomeScreen() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .fillMaxHeight()
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center
             ) {
                 SearchComponent()
+            }
+            SavedEntriesComponent()
+        }
+    }
+
+    @Preview(showBackground = true, showSystemUi = true)
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun SavedEntriesComponent() {
+        val sortingText = buildAnnotatedString {
+            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                append("Item Count: ")
+            }
+            append(sampleResults.count().toString())
+            append("  ")
+            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                append("Sorted By: ")
+            }
+            append("TODO!")
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(8.dp)
+                .border(3.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(8.dp))
+                .padding(8.dp)
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
+            Card {
+                Column(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Info and Sort Card
+                    Row(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.background)
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(2.dp))
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Text(sortingText)
+                            }
+                        }
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background)
+//                            .padding(top = 8.dp)
+                            .border(1.dp, Color.LightGray, RoundedCornerShape(3.dp))
+//                            .padding(8.dp)
+                    ) {
+                        
+                    }
+                }
             }
         }
     }
@@ -54,8 +128,13 @@ class MainActivity : ComponentActivity() {
     fun SearchComponent() {
         var searchBoxText by remember { mutableStateOf("") }
         var isSearchVisible by remember { mutableStateOf(false) }
-        Box(modifier = Modifier.padding(16.dp)) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Row {
                     OutlinedButton(onClick = { isSearchVisible = !isSearchVisible }) {
                         Text("Search")
@@ -163,7 +242,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    val sampleResults = listOf<SingleSearchResult>(
+    private val sampleResults = listOf<SingleSearchResult>(
         SingleSearchResult(
             "Split",
             "2016",
@@ -201,10 +280,11 @@ class MainActivity : ComponentActivity() {
         )
     )
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Preview(showBackground = true, showSystemUi = true)
     @Composable
     fun SingleResultPreview() {
-        SingleResult(singleSearchResult = sampleResults[0])
+        Scaffold(modifier = Modifier.padding(32.dp)) { SingleResult(singleSearchResult = sampleResults[0]) }
     }
 
 }
