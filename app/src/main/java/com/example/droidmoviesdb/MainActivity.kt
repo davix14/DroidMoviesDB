@@ -2,48 +2,55 @@ package com.example.droidmoviesdb
 
 import SingleSearchResult
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.bold
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.droidmoviesdb.search.ExpandableCardModel
+import com.example.droidmoviesdb.search.SavedEntriesCardsViewModel
 import com.example.droidmoviesdb.ui.theme.DroidMoviesDBTheme
 
 class MainActivity : ComponentActivity() {
+    private val savedEntriesCardsViewModel by viewModels<SavedEntriesCardsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityView()
+            MainActivityView(savedEntriesCardsViewModel)
         }
     }
 
     @Composable
-    fun HomeScreen() {
+    fun HomeScreen(savedEntriesCardsViewModel: SavedEntriesCardsViewModel) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -56,14 +63,13 @@ class MainActivity : ComponentActivity() {
             ) {
                 SearchComponent()
             }
-            SavedEntriesComponent()
+            SavedEntriesComponent(savedEntriesCardsViewModel)
         }
     }
 
-    @Preview(showBackground = true, showSystemUi = true)
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun SavedEntriesComponent() {
+    fun SavedEntriesComponent(savedEntriesCardsViewModel: SavedEntriesCardsViewModel) {
         val sortingText = buildAnnotatedString {
             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                 append("Item Count: ")
@@ -98,7 +104,11 @@ class MainActivity : ComponentActivity() {
                         Card(
                             modifier = Modifier
                                 .padding(8.dp)
-                                .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(2.dp))
+                                .border(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.secondary,
+                                    RoundedCornerShape(2.dp)
+                                )
                         ) {
                             Row(
                                 modifier = Modifier.padding(8.dp)
@@ -116,12 +126,154 @@ class MainActivity : ComponentActivity() {
                             .border(1.dp, Color.LightGray, RoundedCornerShape(3.dp))
 //                            .padding(8.dp)
                     ) {
-                        
+                        val cards by savedEntriesCardsViewModel.cards.collectAsState()
+                        val expandedCardIds by savedEntriesCardsViewModel.expandedCardIdsList.collectAsState()
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth()
+                        ) {
+                            itemsIndexed(cards) { _, card ->
+                                ExpandableCard(
+                                    card = card,
+                                    onCardArrowClick = { savedEntriesCardsViewModel.onCardArrowClicked(card.id) },
+                                    expanded = expandedCardIds.contains(card.id),
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
+    @OptIn(ExperimentalAnimationApi::class)
+    @Composable
+    fun ExpandableContent(
+        visible: Boolean = true,
+        initialVisibility: Boolean = false
+    ) {
+        val EXPANSION_TRANSITION_DURATION = 300
+
+        val enterTransition = remember {
+            expandVertically(
+                expandFrom = Alignment.Top,
+                animationSpec = tween(EXPANSION_TRANSITION_DURATION)
+            ) + fadeIn(
+                initialAlpha = 0.3f,
+                animationSpec = tween(EXPANSION_TRANSITION_DURATION)
+            )
+        }
+        val exitTransition = remember {
+            shrinkVertically(
+                // Expand from the top.
+                shrinkTowards = Alignment.Top,
+                animationSpec = tween(EXPANSION_TRANSITION_DURATION)
+            ) + fadeOut(
+                // Fade in with the initial alpha of 0.3f.
+                animationSpec = tween(EXPANSION_TRANSITION_DURATION)
+            )
+        }
+        AnimatedVisibility(
+            visible = visible,
+            initiallyVisible = initialVisibility,
+            enter = enterTransition,
+            exit = exitTransition
+        ) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Spacer(modifier = Modifier.heightIn(100.dp))
+                Text(
+                    text = "Expandable content here",
+                    textAlign = TextAlign.Center
+                )
+            }
+
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun ExpandableCard(
+        card: ExpandableCardModel,
+        onCardArrowClick: () -> Unit,
+        expanded: Boolean,
+    ) {
+        val EXPAND_ANIMATION_DURATION = 300
+        val transitionState = remember {
+            MutableTransitionState(expanded).apply {
+                targetState = !expanded
+            }
+        }
+        val transition = updateTransition(transitionState)
+        val cardPaddingHorizontal by transition.animateDp({
+            tween(durationMillis = EXPAND_ANIMATION_DURATION)
+        }, label = "") {
+            if (expanded) 48.dp else 24.dp
+        }
+        val cardRoundedCorners by transition.animateDp({
+            tween(
+                durationMillis = EXPAND_ANIMATION_DURATION,
+                easing = FastOutSlowInEasing
+            )
+        }, label = "") {
+            if (expanded) 0.dp else 16.dp
+        }
+        val arrowRotationDegree by transition.animateFloat({
+            tween(durationMillis = EXPAND_ANIMATION_DURATION)
+        }, label = "") {
+            if (expanded) 0f else 180f
+        }
+
+        Card(
+            shape = RoundedCornerShape(cardRoundedCorners),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = cardPaddingHorizontal,
+                    vertical = 8.dp
+                )
+        ) {
+            Column {
+                Box {
+                    CardArrow(
+                        degrees = arrowRotationDegree,
+                        onClick = onCardArrowClick
+                    )
+                    CardTitle(title = card.savedEntry.title)
+                }
+                ExpandableContent(visible = expanded, initialVisibility = expanded)
+            }
+        }
+    }
+
+    @Composable
+    fun CardTitle(title: String) {
+        Text(
+            text = title,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            textAlign = TextAlign.Center,
+        )
+    }
+
+    @Composable
+    fun CardArrow(
+        degrees: Float,
+        onClick: () -> Unit
+    ) {
+        IconButton(
+            onClick = onClick,
+            content = {
+                Icon(
+                    painter = rememberVectorPainter(Icons.Default.KeyboardArrowUp),
+                    contentDescription = "Expandable Arrow",
+                    modifier = Modifier.rotate(degrees),
+                )
+            }
+        )
+    }
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -227,16 +379,15 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    @Preview(showBackground = true, showSystemUi = true)
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun MainActivityView() {
+    fun MainActivityView(savedEntriesCardsViewModel: SavedEntriesCardsViewModel) {
         DroidMoviesDBTheme {
             Scaffold(
                 topBar = { TopAppBar() }
             ) {
                 Box(modifier = Modifier.padding(it)) {
-                    HomeScreen()
+                    HomeScreen(savedEntriesCardsViewModel)
                 }
             }
         }
