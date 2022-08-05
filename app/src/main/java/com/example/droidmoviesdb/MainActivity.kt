@@ -136,7 +136,11 @@ class MainActivity : ComponentActivity() {
                             itemsIndexed(cards) { _, card ->
                                 ExpandableCard(
                                     card = card,
-                                    onCardArrowClick = { savedEntriesCardsViewModel.onCardArrowClicked(card.id) },
+                                    onCardArrowClick = {
+                                        savedEntriesCardsViewModel.onCardArrowClicked(
+                                            card.id
+                                        )
+                                    },
                                     expanded = expandedCardIds.contains(card.id),
                                 )
                             }
@@ -147,11 +151,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
     @Composable
     fun ExpandableContent(
         visible: Boolean = true,
-        initialVisibility: Boolean = false
+        initialVisibility: Boolean = false,
+        savedEntry: SingleSearchResult
     ) {
         val EXPANSION_TRANSITION_DURATION = 300
 
@@ -180,12 +185,40 @@ class MainActivity : ComponentActivity() {
             enter = enterTransition,
             exit = exitTransition
         ) {
-            Column(modifier = Modifier.padding(8.dp)) {
-                Spacer(modifier = Modifier.heightIn(100.dp))
-                Text(
-                    text = "Expandable content here",
-                    textAlign = TextAlign.Center
-                )
+            Card(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+                Row(modifier = Modifier.padding(8.dp)) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(savedEntry.poster)
+                                .placeholder(R.drawable.ic_launcher_foreground)
+                                .crossfade(true)
+                                .build()
+                        ),
+                        "poster"
+                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                    ) {
+                        Text(
+                            text = savedEntry.title,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = savedEntry.year,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
             }
 
         }
@@ -239,9 +272,13 @@ class MainActivity : ComponentActivity() {
                         degrees = arrowRotationDegree,
                         onClick = onCardArrowClick
                     )
-                    CardTitle(title = card.savedEntry.title)
+                    CardTitle(title = "${card.savedEntry.title}\t ${card.savedEntry.type}")
                 }
-                ExpandableContent(visible = expanded, initialVisibility = expanded)
+                ExpandableContent(
+                    savedEntry = card.savedEntry,
+                    visible = expanded,
+                    initialVisibility = expanded
+                )
             }
         }
     }

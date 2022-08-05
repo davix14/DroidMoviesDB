@@ -18,10 +18,6 @@ class SavedEntriesCardsViewModel : ViewModel() {
     private val _expandedCardIdsList = MutableStateFlow(listOf<Int>())
     val expandedCardIdsList: StateFlow<List<Int>> get() = _expandedCardIdsList
 
-    init {
-        getFakeData()
-    }
-
     private val sampleResults = listOf<SingleSearchResult>(
         SingleSearchResult(
             "Split",
@@ -59,6 +55,10 @@ class SavedEntriesCardsViewModel : ViewModel() {
             "https://m.media-amazon.com/images/M/MV5BYTlkNWRjMDMtYmVlYS00NTlkLWI5OTUtZWY1YmZmNTNkZGFjXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg"
         )
     )
+
+    init {
+        getFakeData()
+    }
 
     private fun getFakeData() {
         viewModelScope.launch {
