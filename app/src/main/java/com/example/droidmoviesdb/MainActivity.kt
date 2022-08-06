@@ -85,7 +85,8 @@ class MainActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(8.dp)
-                .border(3.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(8.dp))
+                .border(3.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(3.dp))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(8.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
@@ -104,26 +105,31 @@ class MainActivity : ComponentActivity() {
                         Card(
                             modifier = Modifier
                                 .padding(8.dp)
-                                .border(
-                                    1.dp,
-                                    MaterialTheme.colorScheme.secondary,
-                                    RoundedCornerShape(2.dp)
-                                )
+//                                .border(
+//                                    1.dp,
+//                                    MaterialTheme.colorScheme.secondary,
+//                                    RoundedCornerShape(2.dp)
+//                                )
+                                .background(MaterialTheme.colorScheme.background)
                         ) {
                             Row(
                                 modifier = Modifier.padding(8.dp)
+//                                    .background(MaterialTheme.colorScheme.background)
                             ) {
-                                Text(sortingText)
+                                Text(
+                                    text = sortingText
+                                )
                             }
                         }
                     }
+                    // Saved Entries List card
                     Card(
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.background)
 //                            .padding(top = 8.dp)
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(3.dp))
+//                            .border(1.dp, Color.LightGray, RoundedCornerShape(3.dp))
 //                            .padding(8.dp)
                     ) {
                         val cards by savedEntriesCardsViewModel.cards.collectAsState()
@@ -132,6 +138,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
                         ) {
                             itemsIndexed(cards) { _, card ->
                                 ExpandableCard(
@@ -249,7 +256,7 @@ class MainActivity : ComponentActivity() {
                 easing = FastOutSlowInEasing
             )
         }, label = "") {
-            if (expanded) 0.dp else 16.dp
+            if (expanded) 8.dp else 16.dp
         }
         val arrowRotationDegree by transition.animateFloat({
             tween(durationMillis = EXPAND_ANIMATION_DURATION)
@@ -264,7 +271,8 @@ class MainActivity : ComponentActivity() {
                 .padding(
                     horizontal = cardPaddingHorizontal,
                     vertical = 8.dp
-                )
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column {
                 Box {
@@ -362,7 +370,9 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SingleResult(singleSearchResult: SingleSearchResult) {
-        Card {
+        Card(
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
