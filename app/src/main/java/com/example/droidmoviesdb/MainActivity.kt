@@ -22,12 +22,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
@@ -54,9 +55,10 @@ class MainActivity : ComponentActivity() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .background(MaterialTheme.colorScheme.background)
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center
@@ -84,14 +86,16 @@ class MainActivity : ComponentActivity() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(8.dp)
+                .padding(4.dp)
                 .border(3.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(3.dp))
                 .background(MaterialTheme.colorScheme.background)
-                .padding(8.dp)
+                .padding(4.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            Card {
+            Card(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            ) {
                 Column(
                     modifier = Modifier
                         .background(MaterialTheme.colorScheme.background),
@@ -114,10 +118,12 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Row(
                                 modifier = Modifier.padding(8.dp)
-//                                    .background(MaterialTheme.colorScheme.background)
+                                    .background(MaterialTheme.colorScheme.background)
                             ) {
                                 Text(
-                                    text = sortingText
+                                    text = sortingText,
+                                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
+
                                 )
                             }
                         }
@@ -215,13 +221,13 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Text(
                             text = savedEntry.title,
-                            textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Left,
                             style = MaterialTheme.typography.titleLarge
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = savedEntry.year,
-                            textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Left,
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
@@ -276,11 +282,26 @@ class MainActivity : ComponentActivity() {
         ) {
             Column {
                 Box {
+                    val cardTitle = buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(fontWeight = FontWeight.Bold)
+                        ) {
+                            append(card.savedEntry.title)
+                        }
+                        append("\t\t")
+                        withStyle(
+                            style = SpanStyle(fontStyle = FontStyle.Italic)
+                        ) {
+                            append(card.savedEntry.type)
+                        }
+                    }
                     CardArrow(
                         degrees = arrowRotationDegree,
                         onClick = onCardArrowClick
                     )
-                    CardTitle(title = "${card.savedEntry.title}\t ${card.savedEntry.type}")
+                    CardTitle(
+                        title = cardTitle
+                    )
                 }
                 ExpandableContent(
                     savedEntry = card.savedEntry,
@@ -292,7 +313,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun CardTitle(title: String) {
+    fun CardTitle(title: AnnotatedString) {
         Text(
             text = title,
             modifier = Modifier
