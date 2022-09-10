@@ -12,7 +12,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -39,6 +38,7 @@ import coil.request.ImageRequest
 import com.example.droidmoviesdb.search.ExpandableCardModel
 import com.example.droidmoviesdb.search.SavedEntriesCardsViewModel
 import com.example.droidmoviesdb.ui.theme.DroidMoviesDBTheme
+import com.example.droidmoviesdb.ui.components.SearchComponent as search
 
 class MainActivity : ComponentActivity() {
     private val savedEntriesCardsViewModel by viewModels<SavedEntriesCardsViewModel>()
@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
             Row(
                 horizontalArrangement = Arrangement.Center
             ) {
-                SearchComponent()
+                search().SearchComponent()
             }
             SavedEntriesComponent(savedEntriesCardsViewModel)
         }
@@ -117,7 +117,8 @@ class MainActivity : ComponentActivity() {
                                 .background(MaterialTheme.colorScheme.background)
                         ) {
                             Row(
-                                modifier = Modifier.padding(8.dp)
+                                modifier = Modifier
+                                    .padding(8.dp)
                                     .background(MaterialTheme.colorScheme.background)
                             ) {
                                 Text(
@@ -340,97 +341,6 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun SearchComponent() {
-        var searchBoxText by remember { mutableStateOf("") }
-        var isSearchVisible by remember { mutableStateOf(false) }
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row {
-                    OutlinedButton(onClick = { isSearchVisible = !isSearchVisible }) {
-                        Text("Search")
-                    }
-                    Spacer(Modifier.width(16.dp))
-                    if (isSearchVisible) {
-                        OutlinedTextField(
-                            value = searchBoxText,
-                            onValueChange = { searchBoxText = it }
-                        )
-                    }
-                }
-                if (isSearchVisible) {
-                    Spacer(Modifier.height(8.dp))
-                    SearchResults(sampleResults)
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun SearchResults(searchResults: List<SingleSearchResult>) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .fillMaxHeight(0.7f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(items = searchResults, itemContent = { item ->
-                SingleResult(singleSearchResult = item)
-                Spacer(Modifier.height(16.dp))
-            })
-        }
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun SingleResult(singleSearchResult: SingleSearchResult) {
-        Card(
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(singleSearchResult.poster)
-                            .placeholder(R.drawable.ic_launcher_foreground)
-                            .crossfade(true)
-                            .build()
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier.padding(8.dp)
-                )
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
-                ) {
-                    Text(
-                        singleSearchResult.title,
-                        style = MaterialTheme.typography.headlineLarge
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        singleSearchResult.type,
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        singleSearchResult.year,
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
-            }
-
-        }
-    }
-
     @Composable
     fun TopAppBar() {
         SmallTopAppBar(
@@ -499,11 +409,5 @@ class MainActivity : ComponentActivity() {
         )
     )
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Preview(showBackground = true, showSystemUi = true)
-    @Composable
-    fun SingleResultPreview() {
-        Scaffold(modifier = Modifier.padding(32.dp)) { SingleResult(singleSearchResult = sampleResults[0]) }
-    }
 
 }
