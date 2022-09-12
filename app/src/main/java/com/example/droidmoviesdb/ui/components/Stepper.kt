@@ -26,7 +26,7 @@ class Stepper {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun StepsProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentStep: Int) {
+    fun StepsProgressBar(numberOfSteps: Int, currentStep: Int) {
         Card(
             modifier = Modifier
                 .heightIn(max = 100.dp)
@@ -150,7 +150,6 @@ class Stepper {
     fun StepsProgressBarPreview() {
         val currentStep = remember { mutableStateOf(3) }
         StepsProgressBar(
-            modifier = Modifier.fillMaxWidth(),
             numberOfSteps = 3,
             currentStep = currentStep.value
         )
