@@ -21,7 +21,7 @@ class SearchComponent {
     @Composable
     fun SearchComponent() {
         var searchBoxText by remember { mutableStateOf("") }
-        var isSearchVisible by remember { mutableStateOf(false) }
+        var isSearchVisible by remember { mutableStateOf(true) }
         Box(
             modifier = Modifier
                 .padding(16.dp)
