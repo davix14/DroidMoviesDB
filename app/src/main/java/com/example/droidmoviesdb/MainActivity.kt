@@ -255,7 +255,7 @@ class MainActivity : ComponentActivity() {
         val cardPaddingHorizontal by transition.animateDp({
             tween(durationMillis = EXPAND_ANIMATION_DURATION)
         }, label = "") {
-            if (expanded) 48.dp else 24.dp
+            if (expanded) 24.dp else 16.dp
         }
         val cardRoundedCorners by transition.animateDp({
             tween(
