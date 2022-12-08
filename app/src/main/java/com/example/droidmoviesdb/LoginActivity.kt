@@ -93,7 +93,7 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues(), navController: Nav
                     Spacer(modifier = Modifier.width(8.dp))
                     val context = LocalContext.current
                     OutlinedButton(onClick = { context.startActivity(
-                        Intent(context, MainActivity::class.java)
+                        Intent(context, SaveSearchResultActivity::class.java)
                     ) }) {
                         Text(
                             "Submit",
@@ -140,8 +140,9 @@ fun LoginView() {
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.inversePrimary)
         ) {
+            val paddin = it
             NavHost(navController = navController, startDestination = "loginForm") {
-                composable("loginForm") { LoginForm(PaddingValues(), navController) }
+                composable("loginForm") { LoginForm(paddin, navController) }
                 composable("registerForm") { RegisterForm().RegisterFormView() }
             }
         }

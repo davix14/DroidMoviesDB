@@ -74,7 +74,7 @@ class Stepper {
                     }
                     Text(
                         text = countText,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )
                 }
