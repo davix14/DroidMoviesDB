@@ -1,6 +1,6 @@
 package com.example.droidmoviesdb.search
 
-import SingleSearchResult
+import com.example.droidmoviesdb.domain.models.SingleSearchResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers

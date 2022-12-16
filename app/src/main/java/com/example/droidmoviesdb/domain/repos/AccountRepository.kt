@@ -53,6 +53,10 @@ class AccountRepository {
             }
     }
 
+    fun signOut() {
+        auth.signOut()
+    }
+
     companion object {
         val TAG = AccountRepository.javaClass.simpleName
     }

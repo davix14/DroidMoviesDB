@@ -1,6 +1,6 @@
 package com.example.droidmoviesdb
 
-import SingleSearchResult
+import com.example.droidmoviesdb.domain.models.SingleSearchResult
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -31,27 +32,29 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.droidmoviesdb.search.ExpandableCardModel
 import com.example.droidmoviesdb.search.SavedEntriesCardsViewModel
+import com.example.droidmoviesdb.search.SearchViewModel
 import com.example.droidmoviesdb.ui.theme.DroidMoviesDBTheme
-import com.example.droidmoviesdb.ui.components.SearchComponent as search
+import com.example.droidmoviesdb.ui.components.SearchCompose as search
 
 class MainActivity : ComponentActivity() {
-    private val savedEntriesCardsViewModel by viewModels<SavedEntriesCardsViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityView(savedEntriesCardsViewModel)
+            MainActivityView()
         }
     }
 
     @Composable
-    fun HomeScreen(savedEntriesCardsViewModel: SavedEntriesCardsViewModel) {
+    fun HomeScreen(
+    savedEntriesCardsViewModel: SavedEntriesCardsViewModel = viewModel(),
+    searchViewModel: SearchViewModel = viewModel()
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -63,7 +66,11 @@ class MainActivity : ComponentActivity() {
             Row(
                 horizontalArrangement = Arrangement.Center
             ) {
-                search().SearchComponent()
+                val searchResults by searchViewModel.latestResults.observeAsState()
+                search().SearchComponent(
+                    { searchViewModel.searchInputValidation(it) },
+                    searchResults
+                )
             }
             SavedEntriesComponent(savedEntriesCardsViewModel)
         }
@@ -221,7 +228,7 @@ class MainActivity : ComponentActivity() {
                             .padding(start = 8.dp)
                     ) {
                         Text(
-                            text = savedEntry.title,
+                            text = savedEntry.Title,
                             textAlign = TextAlign.Left,
                             style = MaterialTheme.typography.titleLarge
                         )
@@ -287,7 +294,7 @@ class MainActivity : ComponentActivity() {
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)
                         ) {
-                            append(card.savedEntry.title)
+                            append(card.savedEntry.Title)
                         }
                         append("\t\t")
                         withStyle(
@@ -359,13 +366,13 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun MainActivityView(savedEntriesCardsViewModel: SavedEntriesCardsViewModel) {
+    fun MainActivityView() {
         DroidMoviesDBTheme {
             Scaffold(
                 topBar = { TopAppBar() }
             ) {
                 Box(modifier = Modifier.padding(it)) {
-                    HomeScreen(savedEntriesCardsViewModel)
+                    HomeScreen()
                 }
             }
         }

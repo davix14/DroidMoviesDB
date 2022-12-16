@@ -1,6 +1,6 @@
 package com.example.droidmoviesdb.search
 
-import SingleSearchResult
+import com.example.droidmoviesdb.domain.models.SingleSearchResult
 import androidx.compose.runtime.Immutable
 
 @Immutable

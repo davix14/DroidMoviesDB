@@ -1,6 +1,7 @@
 package com.example.droidmoviesdb.ui.components
 
-import SingleSearchResult
+import android.app.appsearch.SearchResult
+import com.example.droidmoviesdb.domain.models.SingleSearchResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,14 +13,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.droidmoviesdb.R
+import com.example.droidmoviesdb.domain.models.SearchByMany
+import io.reactivex.rxjava3.subjects.Subject
 
-class SearchComponent {
+class SearchCompose {
 
     @Composable
-    fun SearchComponent() {
+    fun SearchComponent(
+        searchForEntry: (searchText: String) -> Unit,
+        searchResults: SearchByMany?
+    ) {
         var searchBoxText by remember { mutableStateOf("") }
         var isSearchVisible by remember { mutableStateOf(true) }
         Box(
@@ -30,20 +38,39 @@ class SearchComponent {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row {
-                    OutlinedButton(onClick = { isSearchVisible = !isSearchVisible }) {
-                        Text("Search")
+                    Column {
+                        OutlinedButton(onClick = {
+                            isSearchVisible = !isSearchVisible
+                        }) {
+                            Text(
+                                if (!isSearchVisible)
+                                    "Search"
+                                else
+                                    "Hide"
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        if (isSearchVisible){
+                            OutlinedButton(onClick = { searchForEntry(searchBoxText) }) {
+                                Text("Submit")
+                            }
+                        }
                     }
                     Spacer(Modifier.width(16.dp))
                     if (isSearchVisible) {
                         OutlinedTextField(
                             value = searchBoxText,
-                            onValueChange = { searchBoxText = it }
+                            onValueChange = {
+                                searchBoxText = it
+                            }
                         )
                     }
                 }
                 if (isSearchVisible) {
                     Spacer(Modifier.height(8.dp))
-                    SearchResults(sampleResults)
+                    searchResults?.run {
+                        SearchResults(this.Search)
+                    }
                 }
             }
         }
@@ -88,7 +115,7 @@ class SearchComponent {
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
                 ) {
                     Text(
-                        singleSearchResult.title,
+                        singleSearchResult.Title,
                         style = MaterialTheme.typography.headlineLarge
                     )
                     Spacer(Modifier.height(8.dp))

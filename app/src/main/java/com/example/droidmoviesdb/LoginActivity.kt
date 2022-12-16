@@ -93,7 +93,7 @@ fun LoginForm(paddingValues: PaddingValues = PaddingValues(), navController: Nav
                     Spacer(modifier = Modifier.width(8.dp))
                     val context = LocalContext.current
                     OutlinedButton(onClick = { context.startActivity(
-                        Intent(context, SaveSearchResultActivity::class.java)
+                        Intent(context, MainActivity::class.java)
                     ) }) {
                         Text(
                             "Submit",
